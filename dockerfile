@@ -1,6 +1,6 @@
 FROM node:16
 
-# Create app directory
+# Create app directory in docker
 WORKDIR /usr/src/app
 
 # Install app dependencies
