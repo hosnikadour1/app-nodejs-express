@@ -1,36 +1,23 @@
-pipeline {
-environment {
-registry = "hosnikadour/backend-express-nodesjs"
-registryCredential = 'dockerhub'
-dockerImage = ''
-}
-agent any
-stages {
-stage('Cloning our Git') {
-steps {
-git 'https://github.com/hosnikadour1/backend-express-node-js.git'
-}
-}
-stage('Building our image') {
-steps{
-script {
-dockerImage = docker.build registry + ":$BUILD_NUMBER"
-}
-}
-}
-stage('Deploy our image') {
-steps{
-script {
-docker.withRegistry( '', registryCredential ) {
-dockerImage.push()
-}
-}
-}
-}
-stage('Cleaning up') {
-steps{
-sh "docker rmi $registry:$BUILD_NUMBER"
-}
-}
-}
-}
+node {    
+      def app     
+      stage('Clone repository') {               
+             
+            checkout scm    
+      }     
+      stage('Build image') {         
+       
+            app = docker.build("hosnikadour/backend-express-nodesjs")    
+       }     
+      stage('Test image') {           
+            app.inside {            
+             
+             sh 'echo "Tests passed"'        
+            }    
+        }     
+       stage('Push image') {
+    docker.withRegistry('https://hub.docker.com/', 'git') {            
+       app.push("${env.BUILD_NUMBER}")            
+       app.push("latest")        
+              }    
+           }
+        }
