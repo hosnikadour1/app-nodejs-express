@@ -3,6 +3,7 @@ pipeline {
     imagename = "hosnikadour/backend-express-nodes.js"
     registryCredential = 'dockerhub'
     dockerImage = ''
+    dockerContainer = ''
   }
   agent any
   stages {
@@ -25,16 +26,12 @@ pipeline {
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push("$BUILD_NUMBER")
              dockerImage.push('latest')
+             dockerContainer.run ("--name run -BUILD_NUMBER -3001:3001")
+             
           }
         }
       }
     }
-    stage('Remove Unused docker image') {
-      steps{
-        sh "docker image rm  $imagename:$BUILD_NUMBER"
-         sh "docker image rm $imagename:latest"
- 
-      }
-    }
+    
   }
 }
