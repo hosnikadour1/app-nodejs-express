@@ -11,8 +11,13 @@ pipeline{
 		stage('Build') {
 
 			steps {
-                        sh 'npm install'
-				sh 'docker build -t docker build -t hosnikadour/backend-express-nodes.js:latest .'
+                         '''
+                         npm install
+				docker build -t docker build -t hosnikadour/backend-express-nodes.js:latest .
+                        docker run -d --name backend-app   -p 3003:3001 hosnikadour/backend-express-node.js:latest
+                        curl localhost
+                        '''
+                        
 			}
 		}
 
