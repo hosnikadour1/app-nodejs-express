@@ -1,29 +1,40 @@
-def pipelineContext = [:]
-node {
+pipeline{
 
-   def registryProjet='https://hub.docker.com/repository/docker/hosnikadour/backend-express-nodesjs'
-	 def IMAGE="${registryProjet}:version-${env.BUILD_ID}"
+	agent any
 
-	 echo "IMAGE = $IMAGE"
+	environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	}
 
-    stage('Clone') {
-    			checkout scm
+	stages {
+
+		stage('Build') {
+
+			steps {
+                        sh 'npm install'
+				sh 'docker build -t docker build -t hosnikadour/backend-express-nodes.js:latest .'
+			}
 		}
 
-		def img = stage('Build') {
-					docker.build("$IMAGE",  '.')
+		stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
 		}
-	
-		stage('Run') {
-					img.withRun("--name run-$BUILD_ID -p 3001:3001") { c ->
-						sh 'curl localhost'
-          }					
-		} 
-          
-       stage('Push image') {
-    docker.withRegistry('https://hub.docker.com/', 'dockerhub') {            
-       app.push("${env.BUILD_NUMBER}")            
-       app.push("latest")        
-              }    
-           }
-        }
+
+		stage('Push') {
+
+			steps {
+				sh 'docker push  hosnikadour/backend-express-nodes.js:latest .'
+			}
+		}
+	}
+
+	post {
+		always {
+			sh 'docker logout'
+		}
+	}
+
+}
