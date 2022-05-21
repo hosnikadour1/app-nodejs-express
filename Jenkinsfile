@@ -31,7 +31,7 @@ pipeline {
     }
     stage("run") {
       steps {
-        sh " docker run --rm -p 3001:3001 hosnikadour/backend-express-nodes.js:latest "
+        sh "docker run   -p 3001:3001 hosnikadour/backend-express-nodes.js"
       }
   }
 }
