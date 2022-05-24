@@ -29,10 +29,16 @@ pipeline {
         }
       }
     }
-    stage("run") {
-      steps {
-        sh "docker run   -p 3001:3001 hosnikadour/backend-express-nodes.js"
-      }
-  }
-}
+    stage('Cleaning up') { 
+31
+            steps { 
+32
+                sh "docker rmi $registry:$BUILD_NUMBER" 
+33
+            }
+34
+        } 
+35
+    }
+36
 }
