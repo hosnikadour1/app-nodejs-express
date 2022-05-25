@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Cloning Git') {
       steps {
-        git([url: 'https://github.com/hosnikadour1/backend-frontend-express-nodejs.git', branch: 'main', credentialsId: 'github'])
+        git([url: 'https://github.com/hosnikadour1/backend-frontend-express-nodejs.git'', branch: 'main', credentialsId: 'github'])
  
       }
     }
