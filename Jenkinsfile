@@ -1,4 +1,5 @@
 pipeline {
+  pipeline {
   environment {
     imagename = "hosnikadour/backend-express-nodes.js"
     registryCredential = 'dockerhub'
@@ -12,7 +13,6 @@ pipeline {
  
       }
     }
-      
     stage('Building image') {
       steps{
         script {
@@ -32,5 +32,4 @@ pipeline {
     }
   
     }
-
 }
