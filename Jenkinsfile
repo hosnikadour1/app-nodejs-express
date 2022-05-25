@@ -29,7 +29,15 @@ pipeline {
         }
       }
     }
-    
+    stage ('run Image'){
+      steps{
+        sh "docker stop ${imagename} || true && docker rm ${imagename} || true"
+        sh "docker run -d \
+            --name ${imagename} \
+            --publish ${PORT}:3001 \
+            ${imagename}:${BUILD_NUMBER}"
+      }
+    }
     }
 
 }
