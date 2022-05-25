@@ -12,24 +12,7 @@ pipeline {
  
       }
     }
-     stage('test') {
-     dockerImage = docker.image('node:16')
-     dockerImage.pull()
-     dockerImage.inside {
-       sh 'npm install --only=dev'
-       sh 'npm test'
-     }
-   }
-   stage('test with a DB') {
-      mysql = docker.imagename('mysql').run("-e MYSQL_ALLOW_EMPTY_PASSWORD=yes") 
-     dockerImage = docker.imagename('node:16')
-     dockerImage.pull()
-     dockerImage.inside("--link ${mysql.id}:mysql") { // using linking, mysql will be available at host: mysql, port: 3306
-          sh 'npm install --only=dev' 
-          sh 'npm test'                     
-     }                                   
-     mysql.stop()
-   } 
+      
     stage('Building image') {
       steps{
         script {
