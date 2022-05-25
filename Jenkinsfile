@@ -12,6 +12,12 @@ pipeline {
  
       }
     }
+    stage('test') {
+     nodejs(nodeJSInstallationName: 'nodejs') {
+       sh 'npm install --only=dev'
+       sh 'npm test'
+     }
+   }
     stage('Building image') {
       steps{
         script {
@@ -29,15 +35,7 @@ pipeline {
         }
       }
     }
-    stage ('run Image'){
-      steps{
-        sh "docker stop ${imagename} || true && docker rm ${imagename} || true"
-        sh "docker run -d \
-            --name ${imagename} \
-            --publish ${PORT}:3001 \
-            ${imagename}:${BUILD_NUMBER}"
-      }
-    }
+  
     }
 
 }
