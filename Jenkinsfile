@@ -13,9 +13,7 @@ pipeline {
       }
     }
   stage('test') {
-     imagename = dockerImage('node:4.6')
-     imagename.pull()
-     imagename.inside {
+    
        sh 'npm install --only=dev'
        sh 'npm test'
      }
