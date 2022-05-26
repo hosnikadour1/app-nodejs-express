@@ -12,12 +12,7 @@ pipeline {
  
       }
     }
-  stage('test') {
     
-       sh 'npm install --only=dev'
-       sh 'npm test'
-     }
-   }
     stage('Building image') {
       steps{
         script {
@@ -35,5 +30,6 @@ pipeline {
         }
       }
     }
-  }
+  
+    }
 }
