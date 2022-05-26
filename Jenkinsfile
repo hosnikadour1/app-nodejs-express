@@ -14,8 +14,10 @@ pipeline {
     }
  tage('Test') {
         nodejs(nodeJSInstallationName: 'nodejs') {
-        sh 'npm install --only=dev'
-        sh 'npm test'
+        sh '''
+        npm install --only=dev
+        npm test
+        '''
         }
     }
 
