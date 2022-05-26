@@ -12,16 +12,6 @@ pipeline {
  
       }
     }
- tage('Test') {
-        nodejs(nodeJSInstallationName: 'nodejs') {
-        sh '''
-        npm install --only=dev
-        npm test
-        '''
-        }
-    }
-
-   
     stage('Building image') {
       steps{
         script {
