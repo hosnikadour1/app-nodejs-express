@@ -1,31 +1,39 @@
-node {
-   def commit_id
-   stage('Preparation') {
-     checkout scm
-     sh "git rev-parse --short HEAD > .git/commit-id"                        
-     commit_id = readFile('.git/commit-id').trim()
-   }
+pipeline {
+  environment {
+    imagename = "hosnikadour/backend-nodejs-express"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git([url: 'https://github.com/hosnikadour1/backend-nodejs-express.git', branch: 'main', credentialsId: 'github'])
+ 
+      }
+    }
   stage('test') {
-     def myTestContainer = docker.image('node:4.6')
-     myTestContainer.pull()
-     myTestContainer.inside {
+     imagename = dockerImage('node:4.6')
+     imagename.pull()
+     imagename.inside {
        sh 'npm install --only=dev'
        sh 'npm test'
      }
    }
-   stage('test with a DB') {
-     def mysql = docker.image('mysql').run("-e MYSQL_ALLOW_EMPTY_PASSWORD=yes") 
-     def myTestContainer = docker.image('node:16')
-     myTestContainer.pull()
-     myTestContainer.inside("--link ${mysql.id}:mysql") { // using linking, mysql will be available at host: mysql, port: 3306
-          sh 'npm install --only=dev' 
-          sh 'npm test'                     
-     }                                   
-     mysql.stop()
-   }                 
-   stage('docker build/push') {
-     docker.withRegistry('https://index.docker.io/v2/', 'dockerhub') {
-       def app = docker.build("hosnikadour/backend-nodejs-express:${commit_id}", '.').push()
-     }
-   }
-}
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imagename
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')     
+          }
+        }
+      }
+    }
