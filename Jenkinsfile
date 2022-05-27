@@ -15,8 +15,10 @@ pipeline {
        stage('test'){
          steps{
             nodejs(nodeJSInstallationName: 'nodejs') {
-       bat 'npm install --only=dev'
-       bat 'npm test'
+        '''
+        npm install --only=dev
+        npm run test
+       '''
          }
        }
     stage('Building image') {
