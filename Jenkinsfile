@@ -1,40 +1,29 @@
 pipeline {
-  environment {
-    imagename = "hosnikadour/backend-nodejs-express"
-    registryCredential = 'dockerhub'
-    dockerImage = ''
-  }
-  agent any
-  stages {
-    stage('Cloning Git') {
-      steps {
-        git([url: 'https://github.com/hosnikadour1/backend-nodejs-express.git', branch: 'main', credentialsId: 'github'])
- 
-      }
-    }
+    agent any
 
-      
-    stage('Building image') {
-      steps{
-        script {
-         sh ' dockerImage = docker.build imagename'
+    environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	}
+    stages {
+        stage('Docker Login') {
+            steps {
+                // Add --password-stdin to run docker login command non-interactively
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
         }
-      }
-    }
-    stage('Deploy Image') {
-      steps{
-        script {
-          sh '''
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest') 
-             ''' 
-            
+        stage('Build & push Dockerfile') {
+            steps {
+                sh """
+                docker build -t hosnikadour/backend-nodejs-express .
+                docker push hosnikadour/backend-nodejs-express
+                """
+            }
         }
+        stage ('run dockerfile'){
+          steps{
+            sh "docker run -d --name nodejs -p 3001:3001 hosnikadour/backend-nodejs-express "
+          }
+
         }
-        }
-        }
-  
-  
     }
 }
