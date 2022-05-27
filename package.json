@@ -24,6 +24,7 @@
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
     "mockery": "^2.1.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "sonarqube-scanner": "^2.8.1"
   }
 }
