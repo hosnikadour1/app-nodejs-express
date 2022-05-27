@@ -16,7 +16,7 @@ node {
                                         
    stage('docker build/push') {            
      docker.withRegistry('https://index.docker.io/v2/', 'dockerhub') {
-       def app = docker.build("hosnikadourbackend-nodejs-express:${commit_id}", '.').push()
+       def app = docker.build("hosnikadour/backend-nodejs-express:${commit_id}", '.').push()
      }                                     
    }                                       
 }  
