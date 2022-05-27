@@ -15,10 +15,10 @@ pipeline {
        stage('test'){
          steps{
             nodejs(nodeJSInstallationName: 'nodejs') {
-        '''
-        npm install --only=dev
+        
+       
         npm run test
-       '''
+       
          }
        }
     stage('Building image') {
