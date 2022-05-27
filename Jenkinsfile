@@ -12,6 +12,13 @@ pipeline {
  
       }
     }
+        stage ('test') {
+                steps {
+                  dir('test'){
+                        sh "npm test"
+                  }
+                }
+            }
     stage('Building image') {
       steps{
         script {
