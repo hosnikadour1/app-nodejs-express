@@ -12,6 +12,12 @@ pipeline {
  
       }
     }
+    stage('test') {
+     nodejs(nodeJSInstallationName: 'nodejs') {
+       sh 'npm install --only=dev'
+       sh 'npm test'
+     }
+   }
       
     stage('Building image') {
       steps{
