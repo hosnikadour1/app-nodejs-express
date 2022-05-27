@@ -25,11 +25,7 @@ pipeline {
                 """
             }
         }
-        stage ('run dockerfile'){
-          steps{
-            sh "docker run -d --name nodejs -p 3001:3001 hosnikadour/backend-nodejs-express "
-          }
 
-        }
+        
     }
 }
