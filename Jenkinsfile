@@ -12,14 +12,7 @@ pipeline {
  
       }
     }
-    stage('test') {
-     nodejs(nodeJSInstallationName: 'nodejs') {
-       
-       
-       sh 'cd pfe/backend/backend'
-       sh 'npm run test'
-     }
-   }
+
       
     stage('Building image') {
       steps{
