@@ -16,10 +16,8 @@ pipeline {
      nodejs(nodeJSInstallationName: 'nodejs') {
        
        
-       sh """
-       cd backend/backend
-       npm run test
-       """
+       sh 'cd pfe/backend/backend'
+       sh 'npm run test'
      }
    }
       
