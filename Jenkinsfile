@@ -15,7 +15,11 @@ pipeline {
     stage('test') {
      nodejs(nodeJSInstallationName: 'nodejs') {
        
-       sh 'npm run test'
+       
+       sh """
+       cd backend/backend
+       npm run test
+       """
      }
    }
       
