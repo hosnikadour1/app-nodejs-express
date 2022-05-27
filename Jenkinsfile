@@ -5,6 +5,12 @@ pipeline {
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
 	}
     stages {
+      stage('Cloning Git') {
+      steps {
+        git([url: 'https://github.com/hosnikadour1/backend-nodejs-express.git', branch: 'main', credentialsId: 'github'])
+ 
+      }
+    }
         stage('Docker Login') {
             steps {
                 // Add --password-stdin to run docker login command non-interactively
