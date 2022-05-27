@@ -12,7 +12,7 @@ node {
    stage('test') {
      nodejs(nodeJSInstallationName: 'nodejs') {
        sh 'npm install --only=dev'
-       sh 'npm test'
+       sh 'npm run test'
      }
    }
    stage('docker build/push') {
