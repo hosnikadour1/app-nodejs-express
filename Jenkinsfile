@@ -4,7 +4,7 @@ pipeline {
     registryCredential = 'dockerhub'
     dockerImage = ''
   }
-  agent any
+   agent any
   stages {
     stage('Cloning Git') {
       steps {
@@ -12,8 +12,6 @@ pipeline {
  
       }
     }
-    stages {
-  
     stage('Building image') {
       steps{
         script {
@@ -21,7 +19,6 @@ pipeline {
         }
       }
     }
-
     stage('Deploy Image') {
       steps{
         script {
@@ -32,6 +29,4 @@ pipeline {
         }
       }
     }
-
-   
   
