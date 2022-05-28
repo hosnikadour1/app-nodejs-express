@@ -1,6 +1,6 @@
 node {
    def commit_id
-   stges{
+   stages{
    stage('Preparation') {
      checkout scm
      sh "git rev-parse --short HEAD > .git/commit-id"                        
