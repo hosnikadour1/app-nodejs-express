@@ -1,26 +1,31 @@
-node {
-   def commit_id
-   stage ('clone'){
+pipeline {
+	agent any
+  environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+  }
+stage ('clone'){
 
      git([url: 'https://github.com/hosnikadour1/backend-nodejs-express.git', branch: 'main', credentialsId: 'github'])
    }
-   stage('Preparation') {
-     checkout scm
-     sh "git rev-parse --short HEAD > .git/commit-id"                        
-     commit_id = readFile('.git/commit-id').trim()
-   }
-      stage('test') {
-     def myTestContainer = docker.image('node:4.6')
-     myTestContainer.pull()
-     myTestContainer.inside {
-       sh 'npm install --only=dev'
-       sh 'npm test'
-     }
-   }
+    stages {
+        stage('Docker Login') {
+            steps {
+                // Add --password-stdin to run docker login command non-interactively
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+     
+    stage('Build & push Dockerfile') {
+            steps {
+                sh """
+                docker build -t hosnikadour/backend-nodejs-express . 
+                docker push hosnikadour/backend-nodejs-express
+                """
+                
+            }
+        }
+    }
+    }
+
    
-   stage('docker build/push') {
-     docker.withRegistry('https://index.docker.io/v2/', 'dockerhub') {
-       def app = docker.build("hosnikadour/backend-nodejs-express:${commit_id}", '.').push()
-     }
-   }
-}
+  
