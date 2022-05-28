@@ -1,14 +1,14 @@
 pipeline {
   environment {
-    imagename = "hosnikadour/backend-express-nodes.js"
+    imagename = "hosnikadour/backend-nodejs-express"
     registryCredential = 'dockerhub'
     dockerImage = ''
   }
-   agent any
+  agent any
   stages {
     stage('Cloning Git') {
       steps {
-        git([url: 'https://github.com/hosnikadour1/backend-nodejs-express.git', branch: 'main', credentialsId: 'github'])
+       git([url: 'https://github.com/hosnikadour1/backend-nodejs-express.git', branch: 'main', credentialsId: 'github'])
  
       }
     }
@@ -24,11 +24,17 @@ pipeline {
         script {
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest')     
+             dockerImage.push('latest')
           }
         }
       }
     }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $imagename:$BUILD_NUMBER"
+         sh "docker rmi $imagename:latest"
+ 
+      }
+    }
   }
-  }
-  
+}
