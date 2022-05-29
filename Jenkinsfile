@@ -1,5 +1,6 @@
 pipeline {
   environment {
+    AWS_ECR_LOGIN=true
     imagename = "hosnikadour/backend-nodejs-express"
     registryCredential = 'dockerhub'
     dockerImage = ''
@@ -32,13 +33,7 @@ pipeline {
         }
         }
         }
-        stage('Remove Unused docker image') {
-      steps{
-        sh "docker rmi $imagename:$BUILD_NUMBER"
-         sh "docker rmi $imagename:latest"
- 
-      }
-    }
+     
   }
 }
 
