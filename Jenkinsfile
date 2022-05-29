@@ -1,7 +1,7 @@
 pipeline {
   environment {
     imagename = "hosnikadour/backend-nodejs-express"
-    registryCredential = 'dockerhub-nodejs'
+    registryCredential = 'dockerhub'
     dockerImage = ''
   }
   agent any
@@ -32,5 +32,14 @@ pipeline {
         }
         }
         }
+        stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $imagename:$BUILD_NUMBER"
+         sh "docker rmi $imagename:latest"
+ 
+      }
+    }
+  }
+}
   }
 }
