@@ -12,27 +12,28 @@ pipeline {
  
       }
     }
-
-      
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build imagename 
-        }
-      }
+    stage('Build') {
+		sh 'npm install'
     }
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest')  
-            
+        stage('test'){
+             
+             sh 'npm test'
         }
+	stage('Building image') {
+        docker.withRegistry( 'https://' + registry, registryCredential ) {
+		    imagename = registry + ":$BUILD_NUMBER"
+			dockerImage = docker.build imagename
+			dockerImage.push()
         }
+	}
+	stage('Registring image') {
+        docker.withRegistry( 'https://' + registry, registryCredential ) {
+    		dockerImage.push 'latest2'
         }
-        }
+	}
   
-  
+  stage('Removing image') {
+        sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker rmi $registry:latest"
     }
 }
