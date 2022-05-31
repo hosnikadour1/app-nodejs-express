@@ -2,36 +2,46 @@ pipeline {
     agent any
 
     environment {
+         imagename = "hosnikadour/app-nodejs-express"
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub-devops')
+        dockerImage = ''
 	}
     stages {
-        stage('Docker Login') {
-            steps {
-                // Add --password-stdin to run docker login command non-interactively
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
-        stage('Build & push Dockerfile') {
-            steps {
-                sh """
-                    docker build -t hosnikadour/app-nodejs-express .
-                    docker push hosnikadour/app-nodejs-express
-                    
-                    """
-            }
-        }
-       stage ('Remove Unused docker image') {
-            steps {
-              sh "docker rmi hosnikadour/app-nodejs-express"
+         stage('Cloning Git') {
+      steps {
+        git([url: 'https://github.com/hosnikadour1/app-nodejs-express.git', branch: 'main', credentialsId: 'github'])
+ 
+      }
+    }
 
-       }
-       }
-           stage ('run container') {
-             steps {
-
-               sh "docker run -p 4000:4000 hosnikadour/app-nodejs-express"
-             }
-           }
+        
+       stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imagename
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')  
+            
+        }
+        }
+        }
+        }
+        stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $imagename:$BUILD_NUMBER"
+         sh "docker rmi $imagename:latest"
+ 
+      }
+    }
+  
+         
     }
 }
 
