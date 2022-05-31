@@ -2,16 +2,19 @@ pipeline {
     agent any
 
     environment {
+         imagename = "hosnikadour/app-nodejs-express"
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub-devops')
         dockerImage = ''
 	}
     stages {
-        stage('Docker Login') {
-            steps {
-                // Add --password-stdin to run docker login command non-interactively
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
+         stage('Cloning Git') {
+      steps {
+        git([url: 'https://github.com/hosnikadour1/app-nodejs-express.git', branch: 'main', credentialsId: 'github'])
+ 
+      }
+    }
+
+        
        stage('Building image') {
       steps{
         script {
