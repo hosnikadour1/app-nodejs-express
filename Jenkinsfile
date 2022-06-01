@@ -2,40 +2,49 @@ pipeline {
     agent any
 
     environment {
+         imagename = "hosnikadour/app-nodejs-express"
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub-devops')
-        
+        dockerImage = ''
 	}
     stages {
          stage('Cloning Git') {
       steps {
-         git 'https://github.com/hosnikadour1/app-nodejs-express.git'
+        git([url: 'https://github.com/hosnikadour1/app-nodejs-express.git', branch: 'main', credentialsId: 'github'])
  
       }
     }
 
-         stage('Build docker image') {
-            steps {  
-                sh 'docker build -t hosnikadour/app-nodejs-express:$BUILD_NUMBER .'
-            }
+        
+       stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imagename
         }
-        stage('login to dockerhub') {
-            steps{
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
-        stage('push image') {
-            steps{
-                sh 'docker push hosnikadour/app-nodejs-express:$BUILD_NUMBER'
-            }
-        }
-}
-post {
-        always {
-            sh 'docker logout'
-        }
+      }
     }
-}  
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')  
+            
+        }
+        }
+        }
+        }
+        stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $imagename:$BUILD_NUMBER"
+         sh "docker rmi $imagename:latest"
+ 
+      }
+    }
+  
+         
+    }
+}
 
-    
+
          
  
