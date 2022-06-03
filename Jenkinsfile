@@ -5,6 +5,7 @@ pipeline {
          imagename = "hosnikadour/app-nodejs-express"
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub-devops')
         dockerImage = ''
+        LOADED_BUILD_NUMBER = "${env.BUILD_NUMBER}"
 	}
     stages {
          stage('Cloning Git') {
