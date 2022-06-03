@@ -5,7 +5,7 @@ pipeline {
          imagename = "hosnikadour/app-nodejs-express"
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub-devops')
         dockerImage = ''
-        LOADED_BUILD_NUMBER = "${env.BUILD_NUMBER}"
+        
 	}
     stages {
          stage('Cloning Git') {
@@ -19,7 +19,7 @@ pipeline {
        stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build imagename
+          dockerImage = docker.build imagename + ':1'
         }
       }
     }
@@ -27,8 +27,8 @@ pipeline {
       steps{
         script {
           docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest')  
+            dockerImage.push()
+             
             
         }
         }
