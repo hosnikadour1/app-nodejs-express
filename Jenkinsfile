@@ -1,4 +1,4 @@
-pipeline {
+ pipeline {
     agent any
     stages {
         stage('Tests') {
@@ -30,7 +30,7 @@ pipeline {
             }
             steps {
                 script {
-//                     sh 'docker login -u $DOCKER_HOST_CREDENTIALS_USR -p $DOCKER_HOST_CREDENTIALS_PSW 127.0.0.1:2375'
+//                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                     sh 'docker pull :master'
                     sh 'docker stop backend-app'
                     sh 'docker rm backend-app'
@@ -40,8 +40,9 @@ pipeline {
                 }
             }
         }
-    }
-}
+        }
+    
+
 
          
     
