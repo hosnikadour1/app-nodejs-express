@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "type": "module",
   "scripts": {
     "start": "nodemon app.js",
     "test": "mocha"
@@ -12,12 +11,8 @@
   "author": "hosni",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.0",
-    "cors": "^2.8.5",
     "cucumber": "^6.0.7",
-    "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "mongoose": "^6.3.4",
     "mysql": "^2.18.1",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.4",
@@ -26,12 +21,8 @@
     "sequelize-cli": "^6.4.1"
   },
   "devDependencies": {
-    "chai": "^4.3.6",
-    "jest": "^28.1.0",
     "mocha": "^10.0.0",
-    "mockery": "^2.1.0",
     "nodemon": "^2.0.16",
-    "sonarqube-scanner": "^2.8.1"
+    "supertest": "^6.2.3"
   }
 }
-

@@ -1,25 +1,47 @@
 pipeline {
-	agent any
-  environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub-devops')
-  }
-
+    agent any
     stages {
-        stage('Docker Login') {
+        stage('Tests') {
             steps {
-                // Add --password-stdin to run docker login command non-interactively
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+//                 script {
+//                    docker.image('node:10-stretch').inside { c ->
+                        echo 'Building..'
+                        sh 'npm install'
+                        echo 'Testing..'
+                        sh 'npm test'
+//                         sh "docker logs ${c.id}"
+//                    }
+//                 }
             }
         }
-        stage('Build & push Dockerfile') {
+        stage('Build and push docker image') {
             steps {
-                sh "ansible-playbook ansible-playbook.yml"
-                
-                
+                script {
+                    def dockerImage = docker.build("hosnikadour/app-nodejs-express:master")
+                    docker.withRegistry('', 'dockerhub-devops') {
+                        dockerImage.push('master')
+                    }
+                }
+            }
+        }
+        stage('Deploy to remote docker host') {
+            environment {
+                DOCKER_HOST_CREDENTIALS = credentials('dockerhub-devops')
+            }
+            steps {
+                script {
+//                     sh 'docker login -u $DOCKER_HOST_CREDENTIALS_USR -p $DOCKER_HOST_CREDENTIALS_PSW 127.0.0.1:2375'
+                    sh 'docker pull :master'
+                    sh 'docker stop backend-app'
+                    sh 'docker rm backend-app'
+                    sh 'docker rmi hosnikadour/app-nodejs-express'
+                    sh 'docker tag hosnikadour/app-nodejs-express:master hosnikadour/app-nodejs-express:current'
+                    sh 'docker run -d --name backend-react -p 80:3000 hosnikadour/app-nodejs-express:current'
+                }
             }
         }
     }
-    }
+}
 
          
     
