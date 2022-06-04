@@ -1,6 +1,13 @@
  pipeline {
     agent any
     stages {
+         stage('Cloning Git') {
+      steps {
+        git([url: 'https://github.com/hosnikadour1/backend-nodejs-express.git', branch: 'main', credentialsId: 'github'])
+ 
+      }
+    }
+
         stage('Tests') {
             steps {
 //                 script {
