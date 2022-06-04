@@ -16,33 +16,36 @@ pipeline {
     }
 
         
-       stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build imagename + ':1'
-        }
-      }
-    }
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-             
-            
-        }
-        }
-        }
-        }
-    }
-   
-    post {
+     stage('Building our image') {
+steps{
+script {
+dockerImage = docker.build registry + ":$BUILD_NUMBER"
+}
+}
+}
+stage('Deploy our image') {
+steps{
+script {
+docker.withRegistry( '', registryCredential ) {
+dockerImage.push()
+}
+}
+}
+}
+stage('Cleaning up') {
+steps{
+sh "docker rmi $registry:$BUILD_NUMBER"
+}
+}
+}
+post {
         always {
             sh 'docker logout'
         }
     }
 
 }
+
          
     
 
