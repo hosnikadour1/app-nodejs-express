@@ -17,7 +17,7 @@
         stage('Build and push docker image') {
             steps {
                 script {
-                    def dockerImage = docker.build("hosnikadour/app-nodejs-express:master")
+                    def dockerImage = docker.build("hosnikadour/app-nodejs-express .")
                     docker.withRegistry('', 'dockerhub-devops') {
                         dockerImage.push('master')
                     }
@@ -31,7 +31,7 @@
             steps {
                 script {
 //                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                    sh 'docker pull :master'
+                    sh 'docker pull hosnikadour/app-nodejs-express:master'
                     sh 'docker stop backend-app'
                     sh 'docker rm backend-app'
                     sh 'docker rmi hosnikadour/app-nodejs-express'
