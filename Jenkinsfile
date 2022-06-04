@@ -36,7 +36,7 @@
                     sh 'docker rm backend-app'
                     sh 'docker rmi hosnikadour/app-nodejs-express'
                     sh 'docker tag hosnikadour/app-nodejs-express:master hosnikadour/app-nodejs-express:current'
-                    sh 'docker run -d --name backend-react -p 80:3000 hosnikadour/app-nodejs-express:current'
+                    sh 'docker run -d --name backend-react -p 80:3000 hosnikadour/app-nodejs-express'
                 }
             }
         }
