@@ -1,48 +1,24 @@
 pipeline {
-    agent any
-
-    environment {
-         imagename = "hosnikadour/app-nodejs-express"
+	agent any
+  environment {
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub-devops')
-        dockerImage = ''
-        
-	}
+  }
+
     stages {
-         stage('Cloning Git') {
-      steps {
-        git([url: 'https://github.com/hosnikadour1/app-nodejs-express.git', branch: 'main', credentialsId: 'github'])
- 
-      }
-    }
-
-        
-stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build imagename +':1'
+        stage('Docker Login') {
+            steps {
+                // Add --password-stdin to run docker login command non-interactively
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
         }
-      }
-    }
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry( registry, registryCredential ) {
-            dockerImage.push()
-             
-            
-        }
-        }
-        }
+        stage('Build & push Dockerfile') {
+            steps {
+                sh "ansible-playbook ansible-playbook.yml"
+                
+            }
         }
     }
-post {
-        always {
-            sh 'docker logout'
-        }
     }
-
-}
-
          
     
 
