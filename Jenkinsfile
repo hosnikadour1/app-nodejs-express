@@ -30,7 +30,7 @@
        
 
 
-        }
+        
         stage('Building image') {
       steps{
         script {
