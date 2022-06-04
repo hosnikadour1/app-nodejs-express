@@ -19,7 +19,7 @@
       command: docker build -t hosnikadour/app-nodejs-express.
   
     - name: Push Image to dockerhub
-      command: docker push hosnikadour/
+      command: docker push hosnikadour/app-nodejs-express
 
     - name: run container
       command: docker run -d --name node-express  -p 4000:4000 hosnikadour/app-nodejs-express
