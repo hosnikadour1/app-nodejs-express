@@ -1,4 +1,10 @@
  pipeline {
+     environment {
+    imagename = "hosnikadour/app-nodejs-express"
+    registryCredential = 'dockerhub-devops'
+    dockerImage = ''
+  }
+
     agent any
     stages {
          stage('Cloning Git') {
@@ -21,36 +27,30 @@
 //                 }
             }
         }
-        stage('Build and push docker image') {
-            steps {
-                script {
-                    def dockerImage = docker.build("hosnikadour/app-nodejs-express .")
-                    docker.withRegistry('', 'dockerhub-devops') {
-                        dockerImage.push('master')
-                    }
-                }
-            }
+        stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imagename
         }
-        stage('Deploy to remote docker host') {
-            environment {
-                DOCKER_HOST_CREDENTIALS = credentials('dockerhub-devops')
-            }
-            steps {
-                script {
-//                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                    sh 'docker pull hosnikadour/app-nodejs-express:master'
-                    sh 'docker stop backend-app'
-                    sh 'docker rm backend-app'
-                    sh 'docker rmi hosnikadour/app-nodejs-express'
-                    sh 'docker tag hosnikadour/app-nodejs-express:master hosnikadour/app-nodejs-express:current'
-                    sh 'docker run -d --name backend-react -p 80:3000 hosnikadour/app-nodejs-express'
-                }
-            }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')  
+            
         }
         }
-    
+        }
+        }
+  
+  
+    }
+}
 
-
+        
          
     
 
