@@ -13,17 +13,14 @@ pipeline {
         }
         stage('Build & push Dockerfile') {
             steps {
-                sh """
-                cd app-nodejs-express /
-                ansible-playbook ansible-playbook.yml
+                sh "ansible-playbook ansible-playbook.yml"
                 
-                """
                 
             }
         }
     }
     }
-    
+
          
     
 
