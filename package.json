@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon app.js",
     "test": "mocha"
@@ -11,8 +12,11 @@
   "author": "hosni",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "cucumber": "^6.0.7",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "mongoose": "^6.3.5",
     "mysql": "^2.18.1",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.4",

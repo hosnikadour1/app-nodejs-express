@@ -27,6 +27,18 @@
 //                 }
             }
         }
+        stage (remove image) {
+             steps{
+
+               sh """
+               docker system prune 
+               dockerImage = docker.rmi imagename
+               
+               """
+             }
+
+
+        }
         stage('Building image') {
       steps{
         script {
