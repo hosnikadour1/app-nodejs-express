@@ -32,7 +32,7 @@
 
                sh """
                docker system prune 
-               dockerImage = docker.rmi imagename
+              
                
                """
              }
