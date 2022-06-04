@@ -1,7 +1,7 @@
 FROM node:16 as builder
 
 
-WORKDIR /usr/src/app
+WORKDIR /pfe/backend
 
 COPY package*.json ./
 
