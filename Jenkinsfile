@@ -1,7 +1,7 @@
  pipeline {
      environment {
     imagename = "hosnikadour/app-nodejs-express-backend"
-    registryCredential = 'dockerhub-devops'
+    registryCredential = 'dockerhub'
     dockerImage = ''
   }
 

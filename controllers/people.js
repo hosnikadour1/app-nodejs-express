@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import People from "../models/people.js";
 
 export const getPeople = async (req, res) => {
@@ -20,4 +21,17 @@ export const addPerson = async (req, res) => {
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
+};
+
+export const updatePerson = async (req, res) => {
+  const { id: id } = req.params;
+  const content = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send("no person with that id");
+
+  const updatedSaplings = await People.findByIdAndUpdate(id, content , {
+    new: true,
+  });
+  res.status(201).json(updatedSaplings);
 };
