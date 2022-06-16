@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Run Dockercompose playbook') {
             steps {
-                sh "ansiblecompose-playbook.yml"
+                sh "ansible-playbook ansiblecompose-playbook.yml"
             }
         }
     }
