@@ -1,28 +1,46 @@
 pipeline {
+     environment {
+    imagename = "hosnikadour/ites-app"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+
     agent any
-
-    environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-	}
     stages {
-        stage('Docker Login') {
-            steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
-        stage('Build & push Dockerfile') {
-            steps {
-                sh "ansible-playbook ansible-playbook.yml"
-            }
-        }
-        stage('Run Dockercompose playbook') {
-            steps {
-                sh "ansible-playbook ansiblecompose-playbook.yml"
-            }
-        }
+         stage('Cloning Git') {
+      steps {
+        git([url: 'https://github.com/hosnikadour1/app-nodejs-express.git', branch: 'main', credentialsId: 'github'])
+ 
+      }
     }
-}
+      stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imagename
+        }
+      }
+    }
+    
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')  
+            
+        }
+        }
+        }
+        }
+stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $imagename:$BUILD_NUMBER"
 
+      }
+    }
+    
+  }
+}
     
 
 
