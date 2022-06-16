@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+spec:
+replicas: 2
+selector:
+    matchLabels:
+      component: backend
+    template:
+    metadata:
+      labels:
+        component: backend
+
+containers:
+  -name: backend-iteslab
+  image: hosnikadour/nodejs-app
+  ports:
+  -containerPort: 4000
+         
+
+
+
+
