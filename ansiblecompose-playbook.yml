@@ -10,7 +10,10 @@
   - name: remove image built with dockercompose
     command: docker rmi hosnikadour/nodejs-app
     ignore_errors: yes
-
+  - name: remove image nodejs
+    command: docker rmi node:16
+    ignore_errors: yes
+ 
   - name: remove mongo image
     command: docker rmi mongo
     ignore_errors: yes
