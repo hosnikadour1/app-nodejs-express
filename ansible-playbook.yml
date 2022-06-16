@@ -11,11 +11,11 @@
     ignore_errors: yes
 # Make sure to change the image name with your personal dockerhub account and reposiroty   
   - name: remove used image
-    command: docker rmi hosnikadour/nodejs-app
+    command: docker rmi hosnikadour/app-iteslab-nodejs
     ignore_errors: yes
 # Make sure to change the image name with your personal dockerhub account and reposiroty 
   - name: build docker image from dockerfile
-    command: docker build -t hosnikadour/nodejs-app .  
+    command: docker build -t hosnikadour/app-iteslab-nodejs .  
 # Make sure to change the image name with your personal dockerhub account and reposiroty 
   - name: push image to dockerhub
-    command: docker push hosnikadour/nodejs-app 
+    command: docker push hosnikadour/app-iteslab-nodejs
