@@ -12,12 +12,12 @@ pipeline {
         }
         stage('Build & push Dockerfile') {
             steps {
-                sh "ansible-playbook playbook.yml"
+                sh "ansible-playbook ansible-playbook.yml"
             }
         }
         stage('Run Dockercompose playbook') {
             steps {
-                sh "ansible-playbook playbook-dcompose.yml"
+                sh "ansiblecompose-playbook.yml"
             }
         }
     }
