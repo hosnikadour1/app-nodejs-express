@@ -1,16 +1,18 @@
 pipeline {
-    agent any
-
-    environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+     environment {
+    imagename = "hosnikadour/app-iteslab-nodejs"
+    registryCredential = 'dockerhub'
     dockerImage = ''
-	}
+  }
+
+    agent any
     stages {
-        stage('Docker Login') {
-            steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
+         stage('Cloning Git') {
+      steps {
+        git([url: 'https://github.com/hosnikadour1/app-nodejs-express.git', branch: 'main', credentialsId: 'github'])
+ 
+      }
+    }
        stage('Building image') {
       steps{
         script {
